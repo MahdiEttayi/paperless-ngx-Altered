@@ -127,6 +127,7 @@ import { ComponentWithPermissions } from '../with-permissions/with-permissions.c
 import { DocumentHistoryComponent } from './document-history/document-history.component'
 import { DocumentVersionDropdownComponent } from './document-version-dropdown/document-version-dropdown.component'
 import { MetadataCollapseComponent } from './metadata-collapse/metadata-collapse.component'
+import { QrCodeComponent } from './qr-code/qr-code.component'
 
 enum DocumentDetailNavIDs {
   Details = 1,
@@ -189,6 +190,7 @@ interface IncomingDocumentUpdate {
     RouterModule,
     PngxPdfViewerComponent,
     DocumentVersionDropdownComponent,
+    QrCodeComponent,
   ],
 })
 export class DocumentDetailComponent

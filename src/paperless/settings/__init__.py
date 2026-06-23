@@ -890,6 +890,12 @@ CONSUMER_COLLATE_DOUBLE_SIDED_TIFF_SUPPORT: Final[bool] = get_bool_from_env(
 
 CONSUMER_PDF_RECOVERABLE_MIME_TYPES = ("application/octet-stream",)
 
+PAPERLESS_QR_ENABLED: Final[bool] = get_bool_from_env(
+    "PAPERLESS_QR_ENABLED",
+)
+PAPERLESS_QR_BASE_URL: str = os.getenv("PAPERLESS_QR_BASE_URL", "http://localhost:8000")
+PAPERLESS_QR_POSITION: str = os.getenv("PAPERLESS_QR_POSITION", "bottom-right")
+
 OCR_PAGES = get_int_from_env("PAPERLESS_OCR_PAGES")
 
 # The default language that tesseract will attempt to use when parsing

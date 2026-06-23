@@ -80,6 +80,8 @@ dependencies = [
   "watchfiles>=1.1.1",
   "whitenoise~=6.11",
   "zxing-cpp~=3.0.0",
+  "PyMuPDF~=1.25.0",
+  "qrcode[pil]~=7.4",
 ]
 [project.optional-dependencies]
 mariadb = [

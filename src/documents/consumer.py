@@ -728,6 +728,18 @@ class ConsumerPlugin(
                         # This triggers things like file renaming
                         document.save()
 
+                        # Stamp QR code on the archived PDF after consumption
+                        if (getattr(settings, "PAPERLESS_QR_ENABLED", False)
+                                and document.archive_filename):
+                            try:
+                                from documents.plugins.qr_code import stamp_qr_on_pdf
+                                stamp_qr_on_pdf(document)
+                            except Exception:
+                                self.log.warning(
+                                    "Failed to stamp QR code on document",
+                                    exc_info=True,
+                                )
+
                         if document.root_document_id:
                             document_updated.send(
                                 sender=self.__class__,

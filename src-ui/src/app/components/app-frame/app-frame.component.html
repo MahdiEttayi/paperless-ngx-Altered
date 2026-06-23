@@ -8,8 +8,23 @@
     [ngClass]="{ 'slim': slimSidebarEnabled, 'col-auto col-md-3 col-lg-2 col-xxxl-1' : !slimSidebarEnabled, 'py-3' : !customAppTitle?.length || slimSidebarEnabled, 'py-2': customAppTitle?.length }"
     routerLink="/dashboard"
     tourAnchor="tour.intro">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1.5em" height="1.5em" fill="currentColor">
-      <path d="M341,949.1c-6.9-20.3-20.7-61.2-21.9-61-199.6-88.9-182.5-229.8-134.3-347.5,30,137.2,268.8,148.9,146.2,336-.9,2.2,10,27.8,19.5,51.3,22.7-51.9,58.6-115.5,55.8-120.8C178,398.7,724.9,299,807.1,18.5c83,251.5,53.1,659.8-377.4,814.9-2,1.4-63.5,148.6-66.9,150.2-.2-2.1-33.2,2.9-30.1-8.7,1.6-7,4.8-16.2,8.2-25.6h0v-.2h.1ZM323.1,846.2c48.3-71.9-12.7-120.8-56.9-152.2,81.2,107.4,66.4,120.8,56.9,152.2h0Z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1.5em" height="1.5em" fill="currentColor">
+      <circle cx="256" cy="256" r="220" fill="none" stroke="currentColor" stroke-width="12"/>
+      <circle cx="256" cy="256" r="195" fill="none" stroke="currentColor" stroke-width="6"/>
+      <circle cx="70" cy="256" r="10" fill="currentColor"/>
+      <circle cx="442" cy="256" r="10" fill="currentColor"/>
+      <path d="M145 205 H225 L245 225 H355 Q370 225 370 240 V330 Q370 345 355 345 H155 Q140 345 140 330 V220 Q140 205 155 205 Z" fill="currentColor"/>
+      <path d="M220 125 H315 L350 160 V265 H220 Z" fill="var(--bs-body-bg)" stroke="currentColor" stroke-width="6"/>
+      <path d="M315 125 V160 H350" fill="none" stroke="currentColor" stroke-width="6"/>
+      <line x1="245" y1="185" x2="320" y2="185" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+      <line x1="245" y1="210" x2="325" y2="210" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+      <line x1="245" y1="235" x2="305" y2="235" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+      <rect x="175" y="145" width="14" height="14" rx="2" fill="currentColor"/>
+      <rect x="155" y="170" width="18" height="18" rx="2" fill="currentColor"/>
+      <rect x="182" y="175" width="22" height="22" rx="2" fill="currentColor"/>
+      <rect x="160" y="205" width="14" height="14" rx="2" fill="currentColor"/>
+      <path d="M360 310 C390 270 430 275 440 300 C425 325 390 335 360 310 Z" fill="currentColor"/>
+      <path d="M340 340 C360 315 395 320 405 340 C390 355 360 360 340 340 Z" fill="currentColor"/>
     </svg>
     <div class="ms-2 ms-md-3 d-inline-block" [class.d-md-none]="slimSidebarEnabled">
       @if (customAppTitle?.length) {

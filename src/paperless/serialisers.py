@@ -239,6 +239,8 @@ class ApplicationConfigurationSerializer(
     def update(self, instance, validated_data):
         if instance.app_logo and "app_logo" in validated_data:
             instance.app_logo.delete()
+        if instance.app_favicon and "app_favicon" in validated_data:
+            instance.app_favicon.delete()
         return super().update(instance, validated_data)
 
     def _sanitize_raster_image(self, file: UploadedFile) -> UploadedFile:
@@ -275,6 +277,17 @@ class ApplicationConfigurationSerializer(
                 if mime_type in {"image/jpeg", "image/png"}:
                     file = self._sanitize_raster_image(file)
 
+        return file
+
+    def validate_app_favicon(self, file: UploadedFile):
+        if file:
+            mime_type = magic.from_buffer(file.read(2048), mime=True)
+            if mime_type == "image/svg+xml":
+                reject_dangerous_svg(file)
+            elif mime_type != "image/x-icon":
+                validate_raster_image(file)
+                if mime_type in {"image/jpeg", "image/png"}:
+                    file = self._sanitize_raster_image(file)
         return file
 
     def validate_llm_endpoint(self, value: str | None) -> str | None:

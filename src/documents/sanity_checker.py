@@ -168,6 +168,12 @@ def _build_present_files() -> set[Path]:
     if app_logo:
         logo_file = Path(settings.MEDIA_ROOT / Path(app_logo.lstrip("/"))).resolve()
         present_files.discard(logo_file)
+    app_favicon = general_config.app_favicon
+    if app_favicon:
+        favicon_file = Path(
+            settings.MEDIA_ROOT / Path(app_favicon.lstrip("/")),
+        ).resolve()
+        present_files.discard(favicon_file)
 
     return present_files
 

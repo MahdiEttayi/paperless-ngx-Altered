@@ -203,6 +203,18 @@ class ApplicationConfiguration(AbstractSingletonModel):
         upload_to="logo/",
     )
 
+    app_favicon = models.FileField(
+        verbose_name=_("Application favicon"),
+        null=True,
+        blank=True,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=["ico", "jpg", "png", "gif", "svg"],
+            ),
+        ],
+        upload_to="favicon/",
+    )
+
     """
     Settings for the barcode scanner
     """

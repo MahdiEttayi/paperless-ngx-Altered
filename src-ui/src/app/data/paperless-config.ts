@@ -189,6 +189,13 @@ export const PaperlessConfigOptions: ConfigOption[] = [
     category: ConfigCategory.General,
   },
   {
+    key: 'app_favicon',
+    title: $localize`Application Favicon`,
+    type: ConfigOptionType.File,
+    config_key: 'PAPERLESS_APP_FAVICON',
+    category: ConfigCategory.General,
+  },
+  {
     key: 'app_title',
     title: $localize`Application Title`,
     type: ConfigOptionType.String,
@@ -377,6 +384,7 @@ export interface PaperlessConfig extends ObjectWithId {
   color_conversion_strategy: ColorConvertConfig
   user_args: object
   app_logo: string
+  app_favicon: string
   app_title: string
   barcodes_enabled: boolean
   barcode_enable_tiff_support: boolean

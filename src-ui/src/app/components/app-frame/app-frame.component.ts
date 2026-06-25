@@ -6,6 +6,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop'
 import { NgClass } from '@angular/common'
+import { LogoComponent } from '../common/logo/logo.component'
 import { Component, HostListener, inject, OnInit } from '@angular/core'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import {
@@ -72,6 +73,7 @@ const SCROLL_THRESHOLD = 16
     NgxBootstrapIconsModule,
     DragDropModule,
     TourNgBootstrap,
+    LogoComponent,
   ],
 })
 export class AppFrameComponent

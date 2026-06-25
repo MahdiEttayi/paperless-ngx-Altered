@@ -18,6 +18,11 @@ def settings(request):
         if general_config.app_logo is None or len(general_config.app_logo) == 0
         else django_settings.BASE_URL + general_config.app_logo.lstrip("/")
     )
+    app_favicon = (
+        None
+        if general_config.app_favicon is None or len(general_config.app_favicon) == 0
+        else django_settings.BASE_URL + general_config.app_favicon.lstrip("/")
+    )
 
     return {
         "EMAIL_ENABLED": django_settings.EMAIL_ENABLED,
@@ -27,6 +32,7 @@ def settings(request):
         "domain": getattr(django_settings, "PAPERLESS_URL", request.get_host()),
         "APP_TITLE": app_title,
         "APP_LOGO": app_logo,
+        "APP_FAVICON": app_favicon,
         "FIRST_INSTALL": User.objects.exclude(
             username__in=["consumer", "AnonymousUser"],
         ).count()

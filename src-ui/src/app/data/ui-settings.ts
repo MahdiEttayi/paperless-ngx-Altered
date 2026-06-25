@@ -29,6 +29,7 @@ export const SETTINGS_KEYS = {
   VERSION: 'version',
   LANGUAGE: 'language',
   APP_LOGO: 'app_logo',
+  APP_FAVICON: 'app_favicon',
   APP_TITLE: 'app_title',
   // maintain old general-settings: for backwards compatibility
   BULK_EDIT_CONFIRMATION_DIALOGS:
@@ -279,6 +280,11 @@ export const SETTINGS: UiSetting[] = [
   },
   {
     key: SETTINGS_KEYS.APP_LOGO,
+    type: 'string',
+    default: '',
+  },
+  {
+    key: SETTINGS_KEYS.APP_FAVICON,
     type: 'string',
     default: '',
   },

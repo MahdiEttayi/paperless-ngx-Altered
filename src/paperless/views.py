@@ -109,6 +109,19 @@ class StandardPagination(PageNumberPagination):
 
 class FaviconView(View):
     def get(self, request, *args, **kwargs):
+        from paperless.models import ApplicationConfiguration
+        import magic
+        config = ApplicationConfiguration.objects.first()
+        if config and config.app_favicon:
+            try:
+                path = config.app_favicon.path
+                content_type = magic.from_file(path, mime=True) or "application/octet-stream"
+                return FileResponse(
+                    config.app_favicon.open("rb"),
+                    content_type=content_type,
+                )
+            except FileNotFoundError:
+                pass
         try:
             path = Path(staticfiles_storage.path("paperless/img/favicon.ico"))
             return FileResponse(path.open("rb"), content_type="image/x-icon")

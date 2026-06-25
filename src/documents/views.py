@@ -3907,6 +3907,9 @@ class UiSettingsView(GenericAPIView[Any]):
         ui_settings["app_logo"] = settings.APP_LOGO
         if general_config.app_logo is not None and len(general_config.app_logo) > 0:
             ui_settings["app_logo"] = general_config.app_logo
+        ui_settings["app_favicon"] = None
+        if general_config.app_favicon is not None and len(general_config.app_favicon) > 0:
+            ui_settings["app_favicon"] = general_config.app_favicon
 
         ui_settings["auditlog_enabled"] = settings.AUDIT_LOG_ENABLED
 

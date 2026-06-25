@@ -1,11 +1,9 @@
-# syntax=docker/dockerfile:1
-# https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md
 
 # Stage: compile-frontend
 # Purpose: Compiles the frontend
 # Notes:
 #  - Does PNPM stuff with Typescript and such
-FROM --platform=$BUILDPLATFORM docker.io/node:24-trixie-slim AS compile-frontend
+FROM --platform=$BUILDPLATFORM docker.m.daocloud.io/library/node:24-trixie-slim AS compile-frontend
 
 COPY ./src-ui /src/src-ui
 

@@ -5,10 +5,31 @@ from pathlib import Path
 import fitz
 import qrcode
 from django.conf import settings
+from django.utils.crypto import get_random_string
+from django.utils import timezone
 
-from documents.models import Document
+from documents.models import Document, ShareLink
 
 logger = logging.getLogger("paperless.qr_code")
+
+
+def _get_or_create_share_link(document: Document) -> str:
+    now = timezone.now()
+    existing = ShareLink.objects.filter(
+        document=document,
+        expiration__isnull=True,
+    ).first()
+    if existing is not None:
+        return existing.slug
+
+    slug = get_random_string(50)
+    ShareLink.objects.create(
+        document=document,
+        slug=slug,
+        file_version=ShareLink.FileVersion.ARCHIVE,
+        expiration=None,
+    )
+    return slug
 
 
 def stamp_qr_on_pdf(document: Document) -> None:
@@ -22,7 +43,8 @@ def stamp_qr_on_pdf(document: Document) -> None:
 
     base_url = settings.PAPERLESS_QR_BASE_URL.strip("/")
     position = settings.PAPERLESS_QR_POSITION
-    qr_data = f"{base_url}/documents/{document.pk}/"
+    slug = _get_or_create_share_link(document)
+    qr_data = f"{base_url}/share/{slug}/"
 
     _stamp_qr_on_pdf_file(archive_path, qr_data, position)
     logger.info(f"QR code stamped on document {document.pk} at {archive_path}")

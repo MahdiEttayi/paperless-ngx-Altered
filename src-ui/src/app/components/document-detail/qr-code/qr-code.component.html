@@ -8,7 +8,15 @@
       <button type="button" class="btn-close btn-close-sm" (click)="showQR = false"></button>
     </div>
     @if (qrDataUrl) {
-      <img [src]="qrDataUrl" alt="QR code" class="d-block mx-auto" width="200" height="200" />
+      <img [src]="qrDataUrl" alt="QR code" class="d-block mx-auto mb-2" width="200" height="200" />
+      <div class="d-flex justify-content-center gap-2">
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="downloadQR()" title="Download QR code" i18n-title>
+          <i-bs width="1em" height="1em" name="download"></i-bs>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="printQR()" title="Print QR code" i18n-title>
+          <i-bs width="1em" height="1em" name="printer"></i-bs>
+        </button>
+      </div>
     } @else {
       <div class="d-flex justify-content-center align-items-center" style="width:200px;height:200px">
         <div class="spinner-border spinner-border-sm text-primary" role="status"></div>

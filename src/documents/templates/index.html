@@ -19,48 +19,78 @@
 <body>
 	<pngx-root>
 		<script type="text/javascript">
-			setTimeout(() => {
-				let warning = document.getElementsByClassName('warning').item(0)
-				if (warning) {
-					warning.classList.remove('hide')
-					warning.classList.add('show')
-				}
-			}, 8000)
+			(function() {
+				var img = document.getElementById('loading-logo-img');
+				img.onload = function() {
+					var svg = document.getElementById('loading-logo-svg');
+					if (svg) svg.style.display = 'none';
+					img.style.display = '';
+				};
+				img.src = '/logo/';
+				setTimeout(function() {
+					var warning = document.getElementsByClassName('warning').item(0);
+					if (warning) {
+						warning.classList.remove('hide');
+						warning.classList.add('show');
+					}
+				}, 8000);
+			})();
 		</script>
 		<style type="text/css">
 			html, body {
 				width: 100%;
 				height: 100%;
 			}
-
-			@keyframes pulsate {
-				0% {
-					opacity: 0.1;
-				}
-				50% {
-					opacity: 0.3;
-				}
-				100% {
-					opacity: 0.1;
-				}
+			#loading-splash {
+				position: fixed;
+				inset: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				background: var(--bs-body-bg, #fff);
+				color: var(--bs-body-color, #212529);
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+				z-index: 9999;
 			}
-
-			.app-loader svg, .app-loader h6 {
-				opacity: 0.1;
-				animation: pulsate 2s ease-out;
-				animation-iteration-count: infinite;
+			#loading-splash img, #loading-splash svg {
+				width: 80px;
+				height: auto;
+				color: var(--bs-primary, #17541f);
+				max-height: 80px;
+				object-fit: contain;
 			}
-
-			svg.logo .leaf {
+			#loading-splash svg.logo {
+				width: auto;
+				max-width: 240px;
+				height: 6em;
+			}
+			#loading-splash svg.logo .leaf {
+				fill: var(--bs-primary) !important;
+			}
+			#loading-splash svg.logo .text {
 				fill: var(--bs-body-color) !important;
 			}
+			#loading-text {
+				margin-top: 1.5rem;
+				font-size: 1.1rem;
+				opacity: 0.7;
+			}
+			.warning {
+				font-size: 0.875rem;
+			}
+			.warning.hide {
+				display: none;
+			}
+			.warning.show {
+				display: block;
+			}
 		</style>
-		<div class="bg-light w-100 h-100 d-flex align-items-center">
-			<div class="app-loader align-self-center text-center mx-auto">
-				{% include "paperless-ngx/snippets/svg_logo.html" with extra_attrs="class='logo mb-2' height='6em'" %}
-				<h6 class="m-auto">{% translate "Paperless-ngx is loading..." %}</h6>
-				<p class="warning m-auto mt-3 small fade hide">{% translate "Still here?! Hmm, something might be wrong." %} <a href="https://docs.paperless-ngx.com">{% translate "Here's a link to the docs." %}</a></p>
-			</div>
+		<div id="loading-splash">
+			<img id="loading-logo-img" style="display:none" alt="{% translate 'Logo' %}" />
+			{% include "paperless-ngx/snippets/svg_logo.html" with extra_attrs="id='loading-logo-svg' class='logo mb-2' height='6em'" %}
+			<div id="loading-text">{% translate "Loading ..." %}</div>
+			<p class="warning m-auto mt-3 small fade hide">{% translate "Still here?! Hmm, something might be wrong." %} <a href="https://docs.paperless-ngx.com">{% translate "Here's a link to the docs." %}</a></p>
 		</div>
 		<script type="text/javascript">{# Pass Django messages to Angular frontend #}
 			window.DJANGO_MESSAGES = [

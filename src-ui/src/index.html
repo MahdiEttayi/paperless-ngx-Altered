@@ -10,8 +10,60 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <style>
+    #loading-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bs-body-bg, #fff);
+      color: var(--bs-body-color, #212529);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      z-index: 9999;
+    }
+    #loading-splash img, #loading-splash svg {
+      width: 80px;
+      height: auto;
+      color: var(--bs-primary, #17541f);
+      max-height: 80px;
+      object-fit: contain;
+    }
+    #loading-text {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
+  <div id="loading-splash">
+    <img id="loading-logo-img" style="display:none" alt="logo" />
+    <svg id="loading-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198.43 238.91">
+      <path style="fill:currentColor" d="M100.79,238.37C41.29,237.02.15,195.4.15,135.47.15,89.67,27.25,45.99,71.01,17.8,84.12,8.36,92.19,3.03,92.94,1.25c.5-1.28,4.27-1.28,4.77,0,.75,1.78,8.82,7.11,21.93,16.55,43.76,28.19,70.86,71.87,70.86,117.67,0,59.93-41.13,101.55-90.71,102.9h1Z"/>
+    </svg>
+    <div id="loading-text">Loading ...</div>
+  </div>
   <pngx-root></pngx-root>
+  <script>
+    (function() {
+      var img = document.getElementById('loading-logo-img');
+      img.onload = function() {
+        document.getElementById('loading-logo-svg').style.display = 'none';
+        img.style.display = '';
+      };
+      img.src = '/logo/';
+      function hideSplash() {
+        var root = document.querySelector('pngx-root');
+        if (root && root.children.length > 0) {
+          document.getElementById('loading-splash').style.display = 'none';
+        } else {
+          requestAnimationFrame(hideSplash);
+        }
+      }
+      hideSplash();
+    })();
+  </script>
 </body>
 </html>

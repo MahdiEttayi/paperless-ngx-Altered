@@ -1,9 +1,10 @@
-import { Component, Input, inject } from '@angular/core'
+import { Component, Input, inject, ElementRef, HostListener } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons'
 import * as QRCode from 'qrcode'
 import { ShareLinkService } from 'src/app/services/rest/share-link.service'
 import { FileVersion } from 'src/app/data/share-link'
+import { environment } from 'src/environments/environment'
 
 @Component({
   selector: 'pngx-qr-code',
@@ -13,12 +14,24 @@ import { FileVersion } from 'src/app/data/share-link'
 })
 export class QrCodeComponent {
   private shareLinkService = inject(ShareLinkService)
+  private elementRef = inject(ElementRef)
+  private baseUrl = environment.apiBaseUrl.replace(/\/api\/$/, '')
 
   @Input()
   documentId: number
 
+  @Input()
+  documentHasArchive: boolean = true
+
   qrDataUrl: string | null = null
   showQR = false
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.showQR && !this.elementRef.nativeElement.contains(event.target)) {
+      this.showQR = false
+    }
+  }
 
   toggleQR(): void {
     this.showQR = !this.showQR
@@ -27,11 +40,11 @@ export class QrCodeComponent {
         next: (links: any) => {
           const existing = Array.isArray(links) && links.length > 0 ? links[0] : links?.results?.length > 0 ? links.results[0] : null
           if (existing) {
-            this.generateQR(`${window.location.origin}/share/${existing.slug}/`)
+            this.generateQR(`${this.baseUrl}/share/${existing.slug}/`)
           } else {
-            this.shareLinkService.createLinkForDocument(this.documentId, FileVersion.Archive, null).subscribe({
+            this.shareLinkService.createLinkForDocument(this.documentId, this.documentHasArchive ? FileVersion.Archive : FileVersion.Original, null).subscribe({
               next: (link) => {
-                this.generateQR(`${window.location.origin}/share/${link.slug}/`)
+                this.generateQR(`${this.baseUrl}/share/${link.slug}/`)
               },
             })
           }

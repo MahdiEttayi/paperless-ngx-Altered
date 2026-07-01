@@ -4504,10 +4504,7 @@ def serve_file(
     disposition: str,
     follow_formatting: bool = False,
 ) -> FileResponse:
-    if use_archive:
-        if TYPE_CHECKING:
-            assert doc.archive_filename
-
+    if use_archive and doc.archive_filename:
         file_handle = doc.archive_file
         filename = (
             doc.archive_filename

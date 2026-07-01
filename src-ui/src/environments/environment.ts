@@ -4,13 +4,13 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8000/api/',
+  apiBaseUrl: 'http://10.9.11.67:8000/api/',
   apiVersion: '10',
   appTitle: 'CoopPaperless',
   tag: 'dev',
   version: 'DEVELOPMENT',
-  webSocketHost: 'localhost:8000',
-  webSocketProtocol: 'ws:',
+  webSocketHost: window.location.host,
+  webSocketProtocol: window.location.protocol == 'https:' ? 'wss:' : 'ws:',
   webSocketBaseUrl: '/ws/',
 }
 

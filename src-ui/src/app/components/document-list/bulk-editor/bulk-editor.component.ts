@@ -19,6 +19,7 @@ import { MatchingModel } from 'src/app/data/matching-model'
 import { SelectionDataItem } from 'src/app/data/results'
 import { SETTINGS_KEYS } from 'src/app/data/ui-settings'
 import { IfPermissionsDirective } from 'src/app/directives/if-permissions.directive'
+import { environment } from 'src/environments/environment'
 import { DocumentListViewService } from 'src/app/services/document-list-view.service'
 import { OpenDocumentsService } from 'src/app/services/open-documents.service'
 import {
@@ -26,6 +27,7 @@ import {
   PermissionsService,
   PermissionType,
 } from 'src/app/services/permissions.service'
+import * as QRCode from 'qrcode'
 import { CorrespondentService } from 'src/app/services/rest/correspondent.service'
 import { CustomFieldsService } from 'src/app/services/rest/custom-fields.service'
 import { DocumentTypeService } from 'src/app/services/rest/document-type.service'
@@ -37,6 +39,8 @@ import {
 } from 'src/app/services/rest/document.service'
 import { SavedViewService } from 'src/app/services/rest/saved-view.service'
 import { ShareLinkBundleService } from 'src/app/services/rest/share-link-bundle.service'
+import { ShareLinkService } from 'src/app/services/rest/share-link.service'
+import { FileVersion } from 'src/app/data/share-link'
 import { StoragePathService } from 'src/app/services/rest/storage-path.service'
 import { TagService } from 'src/app/services/rest/tag.service'
 import { SettingsService } from 'src/app/services/settings.service'
@@ -95,6 +99,8 @@ export class BulkEditorComponent
   private permissionService = inject(PermissionsService)
   private savedViewService = inject(SavedViewService)
   private readonly shareLinkBundleService = inject(ShareLinkBundleService)
+  private readonly shareLinkService = inject(ShareLinkService)
+  private qrBaseUrl = environment.apiBaseUrl.replace(/\/api\/$/, '')
 
   tagSelectionModel = new FilterableDropdownSelectionModel(true)
   correspondentSelectionModel = new FilterableDropdownSelectionModel()
@@ -1070,6 +1076,87 @@ export class BulkEditorComponent
       backdrop: 'static',
       size: 'lg',
     })
+  }
+
+  printQrCodes() {
+    const selectedDocs = this.list.documents.filter((d) =>
+      this.list.selected.has(d.id)
+    )
+    if (selectedDocs.length === 0) return
+    let completed = 0
+    const qrEntries: { id: number; title: string; dataUrl: string }[] = []
+    const openPrintWindow = () => {
+      const win = window.open('', '_blank', 'width=800,height=600')
+      if (!win) return
+      win.document.write(`
+        <html><head><title>QR Codes</title>
+        <style>
+          @media print { @page { margin: 10mm } }
+          body { font-family: sans-serif; padding: 20px; }
+          .qr-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+          .qr-item { text-align: center; page-break-inside: avoid; }
+          .qr-item img { width: 180px; height: 180px; }
+          .qr-item .label { font-size: 12px; color: #666; margin-top: 4px; max-width: 180px; word-break: break-word; }
+        </style></head><body>
+        <h3 style="text-align:center;margin-bottom:24px">QR Codes</h3>
+        <div class="qr-grid">`)
+      for (const entry of qrEntries) {
+        win.document.write(`
+          <div class="qr-item">
+            <img src="${entry.dataUrl}" alt="QR ${entry.id}" />
+            <div class="label">${entry.title}</div>
+          </div>`)
+      }
+      win.document.write(`</div></body></html>`)
+      win.document.close()
+      win.onload = () => { win.print() }
+    }
+    for (const doc of selectedDocs) {
+      this.shareLinkService.getLinksForDocument(doc.id).subscribe({
+        next: (links: any) => {
+          const existing = Array.isArray(links) && links.length > 0 ? links[0] : links?.results?.length > 0 ? links.results[0] : null
+          if (existing) {
+            const url = `${this.qrBaseUrl}/share/${existing.slug}/`
+            QRCode.toDataURL(url, { width: 180, margin: 2, color: { dark: '#005696', light: '#ffffff' } }).then((dataUrl: string) => {
+              qrEntries.push({ id: doc.id, title: doc.title, dataUrl })
+              completed++
+              if (completed === selectedDocs.length) openPrintWindow()
+            })
+          } else {
+            this.shareLinkService.createLinkForDocument(doc.id, doc.archived_file_name ? FileVersion.Archive : FileVersion.Original, null).subscribe({
+              next: (link) => {
+                const url = `${this.qrBaseUrl}/share/${link.slug}/`
+                QRCode.toDataURL(url, { width: 180, margin: 2, color: { dark: '#005696', light: '#ffffff' } }).then((dataUrl: string) => {
+                  qrEntries.push({ id: doc.id, title: doc.title, dataUrl })
+                  completed++
+                  if (completed === selectedDocs.length) openPrintWindow()
+                })
+              },
+              error: () => {
+                completed++
+                if (completed === selectedDocs.length) openPrintWindow()
+              },
+            })
+          }
+        },
+        error: () => {
+          this.shareLinkService.createLinkForDocument(doc.id, doc.archived_file_name ? FileVersion.Archive : FileVersion.Original, null).subscribe({
+            next: (link) => {
+              const url = `${this.qrBaseUrl}/share/${link.slug}/`
+              QRCode.toDataURL(url, { width: 180, margin: 2, color: { dark: '#005696', light: '#ffffff' } }).then((dataUrl: string) => {
+                qrEntries.push({ id: doc.id, title: doc.title, dataUrl })
+                completed++
+                if (completed === selectedDocs.length) openPrintWindow()
+              })
+            },
+            error: () => {
+              completed++
+              if (completed === selectedDocs.length) openPrintWindow()
+            },
+          })
+        },
+      })
+    }
   }
 
   emailSelected() {

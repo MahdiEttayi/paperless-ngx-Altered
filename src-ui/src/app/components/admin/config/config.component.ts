@@ -196,8 +196,9 @@ export class ConfigComponent
       .subscribe({
         next: (config) => {
           this.loading = false
-          this.initialize(config)
-          this.store.next(config)
+          this.configForm.get(key).setValue(config[key])
+          const updatedStore = { ...this.store.value, [key]: config[key] }
+          this.store.next(updatedStore)
           this.settingsService.initializeSettings().subscribe()
           this.toastService.showInfo($localize`File successfully updated`)
         },

@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <pngx-qr-code [documentId]="documentId"></pngx-qr-code>
+  <pngx-qr-code [documentId]="documentId" [documentHasArchive]="!!document?.archived_file_name"></pngx-qr-code>
 
   <div class="ms-auto" ngbDropdown>
     <button class="btn btn-sm btn-outline-primary" id="actionsDropdown" ngbDropdownToggle>
